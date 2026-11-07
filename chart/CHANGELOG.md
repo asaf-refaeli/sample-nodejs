@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0](https://github.com/asaf-refaeli/sample-nodejs/compare/sample-app-v0.2.0...sample-app-v0.3.0) (2026-11-07)
+
+
+### Features
+
+* **chart:** add PodDisruptionBudget ([#37](https://github.com/asaf-refaeli/sample-nodejs/issues/37)) ([ed52201](https://github.com/asaf-refaeli/sample-nodejs/commit/ed522016f9c8b252000b714edcafbd57bc0e5050))
+
 ## [0.2.0](https://github.com/asaf-refaeli/sample-nodejs/compare/sample-app-v0.1.2...sample-app-v0.2.0) (2026-11-07)
 
 
