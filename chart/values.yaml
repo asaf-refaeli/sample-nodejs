@@ -4,6 +4,9 @@
 # Ignored when autoscaling.enabled is true (the HPA owns the replica count).
 replicaCount: 2
 
+# Old ReplicaSets to keep. Rollback is a git revert in the GitOps repo, so only a few are kept for debugging.
+revisionHistoryLimit: 3
+
 image:
   # Set per environment in the GitOps repo (ECR repository URI).
   repository: sample-app
