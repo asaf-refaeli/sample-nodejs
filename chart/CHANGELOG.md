@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.0](https://github.com/asaf-refaeli/sample-nodejs/compare/sample-app-v0.1.2...sample-app-v0.2.0) (2026-11-07)
+
+
+### Features
+
+* **chart:** limit kept ReplicaSets ([#27](https://github.com/asaf-refaeli/sample-nodejs/issues/27)) ([e347b8c](https://github.com/asaf-refaeli/sample-nodejs/commit/e347b8c820941db6d4c1a496800bbd871804ec62))
+
 ## [0.1.2](https://github.com/asaf-refaeli/sample-nodejs/compare/sample-app-v0.1.1...sample-app-v0.1.2) (2026-11-07)
 
 
