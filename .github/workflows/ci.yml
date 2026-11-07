@@ -218,7 +218,10 @@ jobs:
   # Commits the released versions to eks-gitops; Argo CD deploys from there. That commit is the deploy; reverting it is the rollback.
   update-gitops:
     needs: [release]
-    if: needs.release.outputs.app_version != '' || needs.release.outputs.chart_tag != ''
+    # Without a status function GitHub adds success(), which also requires the jobs before release; those are skipped on a release commit
+    if: >-
+      !cancelled() && needs.release.result == 'success'
+      && (needs.release.outputs.app_version != '' || needs.release.outputs.chart_tag != '')
     runs-on: ubuntu-latest
     # Serializes pushes to eks-gitops across runs
     concurrency: eks-gitops
