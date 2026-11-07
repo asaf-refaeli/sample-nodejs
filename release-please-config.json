@@ -4,6 +4,7 @@
   "packages": {
     ".": {
       "release-type": "node",
+      "release-as": "1.0.0",
       "include-component-in-tag": false,
       "exclude-paths": ["chart"],
       "extra-files": [{ "type": "generic", "path": "chart/Chart.yaml" }]
