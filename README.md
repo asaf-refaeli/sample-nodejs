@@ -29,6 +29,7 @@ A small Express app used as a deployment target. The focus is the infrastructure
 
 - Runs on every pull request to `main` and on every push to `main`.
 - Versions are bumped by release-please through a release PR; app and chart are versioned independently (see [ADR-0007](docs/adr/0007-version-bumping.md)).
+- The release PR and the release commit run only `helm` and `release`: they change only versions and changelogs, and the release tags the previous commit's already-tested image.
 - Semgrep and Trivy findings are also uploaded to the GitHub Security tab.
 - Third-party actions are pinned by commit SHA and tool images by digest; Dependabot keeps the actions up to date.
 

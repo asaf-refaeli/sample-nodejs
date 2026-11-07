@@ -23,7 +23,8 @@ Supporting rules:
 - Squash merge only, with a CI check on the PR title: the title becomes the commit release-please reads ([release-please README](https://github.com/googleapis/release-please) recommends squash merges).
 - `appVersion` = latest app release, the default image tag; the GitOps repo sets `image.tag`. Standard Helm scaffold pattern; `appVersion` is informational and unrelated to the chart `version` ([Helm Docs: Charts](https://helm.sh/docs/topics/charts/)).
 - ct's version-increment check is off: the chart bump moved from the author to the release PR.
-- On release, the image built from the release commit gets a version tag in ECR. No rebuild; the image contains no version.
+- On an app release, the parent commit's image (built, tested and scanned when it merged) gets the version tag in ECR. No rebuild; the image contains no version.
+- The release PR and the release commit skip `test`, `sast` and `image`: they change only versions and changelogs. `helm` still runs, since the release PR edits `Chart.yaml`.
 - The release PR runs with `GITHUB_TOKEN`; its checks start after "Approve workflows to run" ([GitHub Docs: GITHUB_TOKEN](https://docs.github.com/en/actions/concepts/security/github_token)). No stored token.
 - The GitOps repo deploys release versions (`image.tag`, chart tag). ADR-0006 still applies to building.
 

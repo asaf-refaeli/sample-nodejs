@@ -28,3 +28,8 @@ Supporting rules:
 - Good: when a deploy breaks, `git diff` between the last good and the broken commit shows every input that changed.
 - Bad: chart-only and docs-only merges produce new, functionally identical images; storage is bounded by the lifecycle policy.
 - Bad: every merge runs the full pipeline, including the image build and scan.
+
+## Update (after ADR-0007 and ADR-0008)
+- The GitOps repo now pins release versions (chart git tag, image version tag), not a commit SHA pair. The pairing reason above no longer applies; the rest of the decision stands.
+- Release commits (`chore: release main`) and the release PR don't build: they change only versions and changelogs. The release tags the parent commit's image, built and tested when it merged (ADR-0007). Every other commit on `main` still builds.
+- Change detection per job (app vs chart) is the next step if the build gets slow. It needs skipped builds to carry the previous image tag forward, so every commit still has an image.
