@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/asaf-refaeli/sample-nodejs/compare/v1.1.0...v1.1.1) (2026-11-07)
+
+
+### Bug Fixes
+
+* restore original about text ([#35](https://github.com/asaf-refaeli/sample-nodejs/issues/35)) ([f68a6ce](https://github.com/asaf-refaeli/sample-nodejs/commit/f68a6ceeda61d7648cfb82cea944db6a654f2aa3))
+
 ## [1.1.0](https://github.com/asaf-refaeli/sample-nodejs/compare/v1.0.0...v1.1.0) (2026-11-07)
 
 
