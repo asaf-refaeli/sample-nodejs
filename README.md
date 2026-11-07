@@ -48,10 +48,14 @@ Details: [Pipeline](#pipeline), [Deployment](#deployment).
 
 | Package | Bumped by commits that change | Version written to | Tag |
 |---|---|---|---|
-| App | Anything outside `chart/` | `package.json`, `CHANGELOG.md`, `appVersion` in `chart/Chart.yaml` | `v1.0.0`, plus the same version as an ECR image tag |
+| App (code and image) | Anything outside `chart/` | `package.json`, `CHANGELOG.md`, `appVersion` in `chart/Chart.yaml` | `v1.0.0`, plus the same version as an ECR image tag |
 | Chart | Files under `chart/` | `version` in `chart/Chart.yaml`, `chart/CHANGELOG.md` | `sample-app-v0.2.0` |
 
-- The commit type sets the bump: `fix` is a patch, `feat` a minor, a breaking change a major (a minor for the chart while it's 0.x). `chore`, `docs`, `ci` and other types don't release.
+- The commit type sets the bump:
+  - `fix`: patch
+  - `feat`: minor
+  - breaking change: major (minor for the chart while it's 0.x)
+  - `chore`, `docs`, `ci` and other types: no release
 - PRs are squash-merged, so the PR title becomes the commit release-please reads; the `pr-title` check enforces the format.
 - Every merge updates one open release PR with the next versions and changelogs. Merging it is the release; nothing is versioned by hand.
 
@@ -61,6 +65,7 @@ Configuration: `release-please-config.json`, last released versions in `.release
 
 - **No stored cloud keys:** CI reaches AWS through GitHub OIDC and an IAM role that trusts only this repo's `main` branch.
 - **Pinned supply chain:** third-party actions are pinned by commit SHA, tool images by digest, the base image by digest, and the kubeconform binary by checksum. Dependabot updates the actions and the base image; a base image update ships as a patch release.
+  - Images are written as `tag@digest` (e.g. `node:22.23.4-alpine3.24@sha256:...`). Docker pulls by the digest, which can't change, so a re-pushed tag can't slip in an untested image. The tag keeps the version readable and tells Dependabot which newer version to propose; Dependabot updates both together.
 - **Least privilege:** the workflow defaults to `contents: read`; each job adds only what it needs, and `update-gitops` gets none.
 - **Gates:** Semgrep (code) and Trivy (image) fail the build; their findings are uploaded to the GitHub Security tab.
 - **Hardened container:** runs as a non-root user with a read-only root filesystem and all capabilities dropped; npm is removed from the final image. The integration test runs the image the same way.
