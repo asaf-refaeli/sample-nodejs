@@ -169,6 +169,10 @@ jobs:
       issues: write
       pull-requests: write
       id-token: write
+    # Empty unless that package was released in this run
+    outputs:
+      app_version: ${{ steps.release.outputs.version }}
+      chart_tag: ${{ steps.release.outputs['chart--tag_name'] }}
     steps:
       - id: release
         uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5.0.0
@@ -197,3 +201,58 @@ jobs:
           fi
           media=$(aws ecr batch-get-image --repository-name "$repo" --image-ids imageTag="$GITHUB_SHA" --query 'images[0].imageManifestMediaType' --output text)
           aws ecr put-image --repository-name "$repo" --image-tag "$VERSION" --image-manifest "$manifest" --image-manifest-media-type "$media"
+
+  # Commits the released versions to eks-gitops; Argo CD deploys from there. That commit is the deploy; reverting it is the rollback.
+  update-gitops:
+    needs: [release]
+    if: needs.release.outputs.app_version != '' || needs.release.outputs.chart_tag != ''
+    runs-on: ubuntu-latest
+    # Serializes pushes to eks-gitops across runs
+    concurrency: eks-gitops
+    # GITHUB_TOKEN is not used; access to eks-gitops comes from the GitHub App token
+    permissions: {}
+    steps:
+      # Short-lived token for the App, which is installed on eks-gitops only
+      - id: token
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          client-id: ${{ vars.GITOPS_APP_CLIENT_ID }}
+          private-key: ${{ secrets.GITOPS_APP_PRIVATE_KEY }}
+          repositories: eks-gitops
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: ${{ github.repository_owner }}/eks-gitops
+          token: ${{ steps.token.outputs.token }}
+
+      # Quoted tag so a version like 1.10 is never read as a number
+      - name: Update pins
+        env:
+          APP_VERSION: ${{ needs.release.outputs.app_version }}
+          CHART_TAG: ${{ needs.release.outputs.chart_tag }}
+        run: |
+          if [ -n "$APP_VERSION" ]; then
+            yq -i '.image.tag = strenv(APP_VERSION) | .image.tag style="double"' workloads/apps/sample-app/values.yaml
+          fi
+          if [ -n "$CHART_TAG" ]; then
+            yq -i '(.spec.sources[] | select(.path == "chart")).targetRevision = strenv(CHART_TAG)' bootstrap/apps/sample-app.yaml
+          fi
+
+      # One commit for both pins, so they deploy and revert together
+      - name: Commit and push
+        env:
+          APP_SLUG: ${{ steps.token.outputs.app-slug }}
+          APP_VERSION: ${{ needs.release.outputs.app_version }}
+          CHART_TAG: ${{ needs.release.outputs.chart_tag }}
+        run: |
+          git config user.name "${APP_SLUG}[bot]"
+          git config user.email "${APP_SLUG}[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "Pins already up to date"
+            exit 0
+          fi
+          git commit -m "chore(sample-app): deploy app ${APP_VERSION:-unchanged}, chart ${CHART_TAG:-unchanged}" \
+            -m "From ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/commit/${GITHUB_SHA}"
+          git pull --rebase
+          git push
