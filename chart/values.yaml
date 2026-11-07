@@ -83,6 +83,12 @@ serviceMonitor:
   labels: {}
   interval: 30s
 
+# Limits voluntary evictions (node drains, cluster upgrades) to one pod at a time.
+# maxUnavailable instead of minAvailable: with 1 replica a drain can still evict the pod instead of hanging.
+podDisruptionBudget:
+  enabled: true
+  maxUnavailable: 1
+
 autoscaling:
   enabled: false
   minReplicas: 2
