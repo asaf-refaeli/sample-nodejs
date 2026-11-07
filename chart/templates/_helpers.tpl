@@ -31,8 +31,10 @@ Common labels
 {{- define "sample-app.labels" -}}
 helm.sh/chart: {{ include "sample-app.chart" . }}
 {{ include "sample-app.selectorLabels" . }}
-{{- if .Chart.AppVersion }}
-app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- /* Same rule as the image in deployment.yaml, so the label shows the version that is running */}}
+{{- $version := .Values.image.tag | default .Chart.AppVersion }}
+{{- if $version }}
+app.kubernetes.io/version: {{ $version | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
