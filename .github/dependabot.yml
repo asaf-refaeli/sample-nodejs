@@ -14,3 +14,7 @@ updates:
       interval: weekly
     cooldown:
       default-days: 7
+    # A new base image changes what runs, so the PR title is "fix(deps): ..." and release-please makes a patch release
+    commit-message:
+      prefix: fix
+      include: scope
