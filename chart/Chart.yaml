@@ -3,9 +3,10 @@ name: sample-app
 description: Helm chart for the sample Node.js Express app
 type: application
 # Chart version. Bumped by release-please from feat/fix commits under chart/.
-version: 0.1.1
+version: 0.1.2
 # Latest app release, set by release-please between the markers. Default image tag; the GitOps repo sets image.tag per deploy.
 # Markers on their own lines: release-please re-saves this file with one space before inline comments, which yamllint rejects.
 # x-release-please-start-version
 appVersion: "1.0.0"
+
 # x-release-please-end
