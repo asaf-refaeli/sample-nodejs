@@ -168,6 +168,32 @@ jobs:
       contents: write
       issues: write
       pull-requests: write
+      id-token: write
     steps:
       - id: release
         uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5.0.0
+
+      # The steps below run only on an app release (outputs without a path prefix belong to the "." package)
+      - name: Configure AWS credentials
+        if: steps.release.outputs.release_created == 'true'
+        uses: aws-actions/configure-aws-credentials@e1253824e5c10ff9df46874f81ed3ec929e19cfd # v6.3.0
+        with:
+          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      # Adds the version tag to the image the image job pushed for this commit: same manifest, same digest, no rebuild
+      - name: Tag release image in ECR
+        if: steps.release.outputs.release_created == 'true'
+        env:
+          ECR_REPOSITORY: ${{ vars.ECR_REPOSITORY }}
+          VERSION: ${{ steps.release.outputs.version }}
+        run: |
+          repo="${ECR_REPOSITORY#*/}"
+          manifest=$(aws ecr batch-get-image --repository-name "$repo" --image-ids imageTag="$GITHUB_SHA" --query 'images[0].imageManifest' --output text)
+          # batch-get-image reports a missing image as "None" instead of failing
+          if [ "$manifest" = "None" ]; then
+            echo "Image $repo:$GITHUB_SHA not found"
+            exit 1
+          fi
+          media=$(aws ecr batch-get-image --repository-name "$repo" --image-ids imageTag="$GITHUB_SHA" --query 'images[0].imageManifestMediaType' --output text)
+          aws ecr put-image --repository-name "$repo" --image-tag "$VERSION" --image-manifest "$manifest" --image-manifest-media-type "$media"
