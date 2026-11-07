@@ -47,8 +47,14 @@ app.get('/metrics', async (req, res) => {
 
 // Start the server only when run directly (node app.js), not when imported by tests
 if (require.main === module) {
-    app.listen(port, () => {
+    const server = app.listen(port, () => {
         console.log(`Server running on port ${port}`);
+    });
+
+    // As PID 1 in the container, Node ignores SIGTERM unless a handler is set, so Kubernetes would wait the whole grace period and then SIGKILL
+    process.on('SIGTERM', () => {
+        console.log('SIGTERM received, closing server');
+        server.close(() => process.exit(0));
     });
 }
 
