@@ -8,22 +8,26 @@ A small Express app used as a deployment target. The focus is the infrastructure
 
 ```
  test ─┐
-       ├─► build ─► integration test ─► Trivy scan ─► push to ECR* ─┐
- sast ─┘                                                            ├─► update GitOps repo*
- helm ──────────────────────────────────────────────────────────────┘
+       ├─► image: build ─► integration test ─► Trivy scan ─► push to ECR* ─┐
+ sast ─┘                                                                   ├─► release* ─► update GitOps repo**
+ helm ─────────────────────────────────────────────────────────────────────┘
 ```
-`*` planned: runs only on merge to `main`.
+`*` runs only on merge to `main`. `**` planned.
 
 | Job | Tool | Fails when |
 |---|---|---|
 | `test` | Jest + Supertest | Any unit test fails |
 | `sast` | Semgrep | Any finding with severity `ERROR` in the code |
-| `helm` | chart-testing (`ct lint`), kubeconform | Chart lint error, chart changed without a version bump, or a rendered resource doesn't match the Kubernetes schema |
-| `build` | Docker | Image doesn't build |
-| `build` → integration test | `scripts/integration-test.sh` | Image doesn't start read-only as a non-root user, or any endpoint fails |
-| `build` → Trivy | Trivy | Any `HIGH` or `CRITICAL` vulnerability in the image (fixed or not) |
+| `helm` | chart-testing (`ct lint`), kubeconform | Chart lint error, or a rendered resource doesn't match the Kubernetes schema |
+| `image` | Docker | Image doesn't build |
+| `image` → integration test | `scripts/integration-test.sh` | Image doesn't start read-only as a non-root user, or any endpoint fails |
+| `image` → Trivy | Trivy | Any `HIGH` or `CRITICAL` vulnerability in the image (fixed or not) |
+| `image` → push | AWS CLI, GitHub OIDC | Login or push to ECR fails; the image is tagged with the commit SHA |
+| `release` | release-please | Opening the release PR or creating the release fails |
+| `pr-title` (separate workflow) | action-semantic-pull-request | The PR title isn't a Conventional Commit |
 
 - Runs on every pull request to `main` and on every push to `main`.
+- Versions are bumped by release-please through a release PR; app and chart are versioned independently (see [ADR-0007](docs/adr/0007-version-bumping.md)).
 - Semgrep and Trivy findings are also uploaded to the GitHub Security tab.
 - Third-party actions are pinned by commit SHA and tool images by digest; Dependabot keeps the actions up to date.
 
@@ -40,7 +44,10 @@ A small Express app used as a deployment target. The focus is the infrastructure
 │   └── ci/                     # Values files for the chart checks
 ├── .github/
 │   ├── workflows/ci.yml        # The pipeline
-│   └── dependabot.yml          # Keeps pinned actions up to date
+│   ├── workflows/pr-title.yml  # PR title check
+│   └── dependabot.yml          # Keeps pinned actions and the base image up to date
+├── release-please-config.json  # Versioning: packages and release types
+├── .release-please-manifest.json # Last released version of each package
 └── docs/adr/                   # Architecture decision records
 ```
 
@@ -53,6 +60,8 @@ A small Express app used as a deployment target. The focus is the infrastructure
 | [0003](docs/adr/0003-helm-chart-location.md) | Helm chart lives in this repo; environment values and deployed versions live in the GitOps repo |
 | [0004](docs/adr/0004-workload-type.md) | Workload type: Deployment (stateless app) |
 | [0005](docs/adr/0005-sast-tool.md) | SAST tool: Semgrep |
+| [0006](docs/adr/0006-image-per-commit.md) | One image per commit on `main`, tagged with the commit SHA |
+| [0007](docs/adr/0007-version-bumping.md) | Versioning: release-please, independent app and chart versions |
 
 ## Run locally
 
@@ -87,7 +96,7 @@ The app listens on `PORT` (default `8080`).
 
 ## Deployment (planned)
 
-On merge to `main`, CI updates the [GitOps repo](https://github.com/asaf-refaeli/platform), pinning both the image tag and the chart revision. Argo CD syncs the cluster from that repo. A rollback is a commit there that restores the previous pin.
+On each release, CI updates the [GitOps repo](https://github.com/asaf-refaeli/platform), pinning the app version (image tag) and the chart version (chart tag). Argo CD syncs the cluster from that repo. A rollback is a commit there that restores the previous pin.
 
 ## Node.js version
 

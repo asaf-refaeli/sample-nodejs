@@ -2,7 +2,7 @@ apiVersion: v2
 name: sample-app
 description: Helm chart for the sample Node.js Express app
 type: application
-# Chart version. Bump on any change to the chart.
+# Chart version. Bumped by release-please from feat/fix commits under chart/.
 version: 0.1.1
-# Default image tag when image.tag is not set. The GitOps repo sets image.tag per deploy.
-appVersion: "1.0.0"
+# Latest app release, set by release-please (marker below). Default image tag; the GitOps repo sets image.tag per deploy.
+appVersion: "1.0.0"  # x-release-please-version

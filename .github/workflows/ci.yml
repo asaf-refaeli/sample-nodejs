@@ -60,7 +60,7 @@ jobs:
       run:
         shell: bash
     steps:
-      # Full history so ct can diff against main and check the chart version bump
+      # Full history so ct can diff against main to find changed charts
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
@@ -69,9 +69,9 @@ jobs:
       - name: Trust the checkout for git
         run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
 
-      # Lints each chart/ci/*-values.yaml; fails if the chart changed without a version bump
+      # Lints each chart/ci/*-values.yaml. Version bump check is off: release-please bumps the chart in its release PR
       - name: Chart lint (ct)
-        run: ct lint --chart-dirs . --target-branch main --validate-maintainers=false
+        run: ct lint --chart-dirs . --target-branch main --validate-maintainers=false --check-version-increment=false
 
       - name: Install kubeconform
         run: |
@@ -155,3 +155,19 @@ jobs:
           aws ecr get-login-password | docker login --username AWS --password-stdin "$registry"
           docker tag "$IMAGE" "$ECR_REPOSITORY:$GITHUB_SHA"
           docker push "$ECR_REPOSITORY:$GITHUB_SHA"
+
+  # Opens/updates the release PR on each merge; creates tags and GitHub Releases when the release PR is merged.
+  # Runs only after every gate passed; image also guarantees the release commit's image is already in ECR.
+  release:
+    needs: [image, helm]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    # Two quick merges must not update the release PR at the same time
+    concurrency: release-please
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    steps:
+      - id: release
+        uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5.0.0

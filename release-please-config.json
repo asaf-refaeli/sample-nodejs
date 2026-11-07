@@ -1,0 +1,16 @@
+{
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+  "bootstrap-sha": "0277dcccd4650ed6f65c680f07462eb77168e169",
+  "packages": {
+    ".": {
+      "release-type": "node",
+      "include-component-in-tag": false,
+      "exclude-paths": ["chart"],
+      "extra-files": [{ "type": "generic", "path": "chart/Chart.yaml" }]
+    },
+    "chart": {
+      "release-type": "helm",
+      "bump-minor-pre-major": true
+    }
+  }
+}
