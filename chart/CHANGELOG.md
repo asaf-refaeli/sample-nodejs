@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.1](https://github.com/asaf-refaeli/sample-nodejs/compare/sample-app-v0.5.0...sample-app-v0.5.1) (2026-11-08)
+
+
+### Bug Fixes
+
+* **chart:** pass service.port to the app as PORT ([#57](https://github.com/asaf-refaeli/sample-nodejs/issues/57)) ([54e7a8d](https://github.com/asaf-refaeli/sample-nodejs/commit/54e7a8de7c1557abcc59ba456e040898fd8eccbc))
+
 ## [0.5.0](https://github.com/asaf-refaeli/sample-nodejs/compare/sample-app-v0.4.0...sample-app-v0.5.0) (2026-11-08)
 
 
