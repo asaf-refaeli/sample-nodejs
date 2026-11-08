@@ -5,7 +5,8 @@
 replicaCount: 2
 
 # Old ReplicaSets to keep. Rollback is a git revert in the GitOps repo, so only a few are kept for debugging.
-revisionHistoryLimit: 3
+# Intentionally wrong type: demo for the helm gate. Never merge.
+revisionHistoryLimit: "three"
 
 image:
   # Set per environment in the GitOps repo (ECR repository URI).
