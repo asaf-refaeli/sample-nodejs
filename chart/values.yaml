@@ -76,6 +76,16 @@ readinessProbe:
     path: /ready
     port: http
 
+# Keeps the old pod serving while the ALB deregisters it; SIGTERM is sent after the sleep.
+# Built-in sleep action (Kubernetes 1.30+), so the image needs no sleep binary.
+lifecycle:
+  preStop:
+    sleep:
+      seconds: 15
+
+# Must exceed the preStop sleep plus the app's shutdown time, or the pod is killed mid-drain.
+terminationGracePeriodSeconds: 30
+
 # Prometheus Operator scrape config for /metrics. Needs the ServiceMonitor CRD in the cluster.
 serviceMonitor:
   enabled: false
