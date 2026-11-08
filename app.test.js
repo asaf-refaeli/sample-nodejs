@@ -24,7 +24,7 @@ describe('app endpoints', () => {
     test('GET /my-app returns hello world', async () => {
         const res = await request(app).get('/my-app');
         expect(res.status).toBe(200);
-        expect(res.text).toBe('Hello, World!');
+        expect(res.text).toBe('Hello, World!<br>¡Hola, Mundo!');
     });
 
     test('GET /about returns the app description', async () => {
