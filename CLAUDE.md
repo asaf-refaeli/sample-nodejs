@@ -9,10 +9,12 @@ A minimal Express.js app used as a deployment target for DevOps work: Kubernetes
 ## Commands
 
 - Install deps: `npm ci` (lockfile is committed)
-- Run: `node app.js` (listens on `PORT`, default `8080`)
-- Target runtime: Node.js v22.1.0 (per README)
+- Run: `npm start` (`node app.js`, listens on `PORT`, default `8080`)
+- Unit tests: `npm test` (Jest + Supertest, `app.test.js`)
+- Container integration test: `scripts/integration-test.sh <image>`
+- Runtime: Node.js 22 LTS, exact version pinned in the `Dockerfile`
 
-There is no `start` script, test suite, linter, or build step. `npm test` exits with an error by design (npm placeholder). `package.json` `"main"` points to `index.js`, but the entry point is `app.js`. Keep that in mind when writing Dockerfiles or adding a `start` script.
+The container runs `node app.js` directly, not `npm start`: npm is removed from the runtime image, and Node must be PID 1 so the SIGTERM handler receives the signal.
 
 ## Architecture
 
