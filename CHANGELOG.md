@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/asaf-refaeli/sample-nodejs/compare/v1.1.2...v1.2.0) (2026-11-08)
+
+
+### Features
+
+* add Spanish greeting to my-app ([#43](https://github.com/asaf-refaeli/sample-nodejs/issues/43)) ([267790c](https://github.com/asaf-refaeli/sample-nodejs/commit/267790c60cadf9cfcae384c930bdd74e3f920fdf))
+
 ## [1.1.2](https://github.com/asaf-refaeli/sample-nodejs/compare/v1.1.1...v1.1.2) (2026-11-08)
 
 
