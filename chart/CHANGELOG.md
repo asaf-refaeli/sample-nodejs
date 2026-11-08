@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.0](https://github.com/asaf-refaeli/sample-nodejs/compare/sample-app-v0.4.0...sample-app-v0.5.0) (2026-11-08)
+
+
+### Features
+
+* **chart:** validate values with a JSON schema ([#55](https://github.com/asaf-refaeli/sample-nodejs/issues/55)) ([b2f709a](https://github.com/asaf-refaeli/sample-nodejs/commit/b2f709acbb5f18c016996da9a282e5f0bd09be06))
+
 ## [0.4.0](https://github.com/asaf-refaeli/sample-nodejs/compare/sample-app-v0.3.0...sample-app-v0.4.0) (2026-11-08)
 
 
