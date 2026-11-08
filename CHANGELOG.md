@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.2](https://github.com/asaf-refaeli/sample-nodejs/compare/v1.1.1...v1.1.2) (2026-11-08)
+
+
+### Bug Fixes
+
+* shut down gracefully on SIGTERM ([#39](https://github.com/asaf-refaeli/sample-nodejs/issues/39)) ([992b3d2](https://github.com/asaf-refaeli/sample-nodejs/commit/992b3d236bc116955ea079739ab72201898b124d))
+
 ## [1.1.1](https://github.com/asaf-refaeli/sample-nodejs/compare/v1.1.0...v1.1.1) (2026-11-07)
 
 
