@@ -7,6 +7,6 @@ version: 0.4.0
 # Latest app release, set by release-please between the markers. Default image tag; the GitOps repo sets image.tag per deploy.
 # Markers on their own lines: release-please re-saves this file with one space before inline comments, which yamllint rejects.
 # x-release-please-start-version
-appVersion: "1.2.0"
+appVersion: "1.2.1"
 
 # x-release-please-end

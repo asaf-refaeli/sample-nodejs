@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.1](https://github.com/asaf-refaeli/sample-nodejs/compare/v1.2.0...v1.2.1) (2026-11-08)
+
+
+### Bug Fixes
+
+* remove Spanish greeting from my-app ([#45](https://github.com/asaf-refaeli/sample-nodejs/issues/45)) ([a997e3e](https://github.com/asaf-refaeli/sample-nodejs/commit/a997e3ee7671cdc7ef283f90014d0bb3ef7a3780))
+
 ## [1.2.0](https://github.com/asaf-refaeli/sample-nodejs/compare/v1.1.2...v1.2.0) (2026-11-08)
 
 
