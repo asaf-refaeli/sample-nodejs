@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.2](https://github.com/asaf-refaeli/sample-nodejs/compare/v1.2.1...v1.2.2) (2026-11-08)
+
+
+### Bug Fixes
+
+* point package.json main to app.js and add start script ([#53](https://github.com/asaf-refaeli/sample-nodejs/issues/53)) ([cdf00b8](https://github.com/asaf-refaeli/sample-nodejs/commit/cdf00b863fcd3449afeed62e0c466dbf3b3c0724))
+
 ## [1.2.1](https://github.com/asaf-refaeli/sample-nodejs/compare/v1.2.0...v1.2.1) (2026-11-08)
 
 
