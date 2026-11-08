@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.0](https://github.com/asaf-refaeli/sample-nodejs/compare/sample-app-v0.3.0...sample-app-v0.4.0) (2026-11-08)
+
+
+### Features
+
+* **chart:** drain pods with a preStop sleep before shutdown ([#41](https://github.com/asaf-refaeli/sample-nodejs/issues/41)) ([b56f17b](https://github.com/asaf-refaeli/sample-nodejs/commit/b56f17b1f885ba6da9c85c9e7b8fdf7e928fb842))
+
 ## [0.3.0](https://github.com/asaf-refaeli/sample-nodejs/compare/sample-app-v0.2.0...sample-app-v0.3.0) (2026-11-07)
 
 
