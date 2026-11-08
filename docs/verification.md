@@ -4,17 +4,12 @@ Screenshots of real pipeline runs, releases and deploys to the EKS cluster, take
 
 Live app: https://sample-app.asafr.dev/my-app
 
-## Assignment requirements
+## What is verified
 
-| Requirement | Shown in |
-|---|---|
-| Helm chart deployed with Argo CD | [PodDisruptionBudget](#1-chart-change-poddisruptionbudget-chart-030), screenshots 06-08 |
-| Version bumping (app and chart, separately) | Chart `0.3.0` (04), app `1.1.2` (11-12), `1.2.0` (17, 19), `1.2.1` (24) |
-| SAST fails the pipeline | [Security gates](#4-security-and-quality-gates-failing-on-purpose), screenshot 26 |
-| Image scan blocks high-severity vulnerabilities | Screenshots 27-28 |
-| Build, test and push the image | Screenshots 18, 22 |
-| Deploy through GitOps (separate repo) | Bot commits in eks-gitops: 06, 14; app live in the browser: 21, 25 |
-| App reachable through the Ingress | Screenshots 16, 21, 25 |
+1. [Chart change: PodDisruptionBudget](#1-chart-change-poddisruptionbudget-chart-030): a chart-only release (`0.3.0`) deployed through GitOps, with the PDB on the cluster before and after.
+2. [App fix: graceful shutdown](#2-app-fix-graceful-shutdown-app-112): a patch release (`1.1.2`) from PR to the running image in Argo CD.
+3. [Feature and revert](#3-feature-and-revert-app-120--121): a minor release (`1.2.0`) visible in the browser, then reverted with `git revert` as `1.2.1`.
+4. [Security and quality gates failing on purpose](#4-security-and-quality-gates-failing-on-purpose): SAST, image scan, PR title, unit tests and chart schema, each blocking the pipeline.
 
 ## How a release flows
 
