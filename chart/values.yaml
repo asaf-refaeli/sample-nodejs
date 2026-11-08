@@ -40,7 +40,7 @@ securityContext:
       - ALL
 
 service:
-  # The app listens on 8080 (PORT default in app.js). Used for both containerPort and the Service port.
+  # Port the app listens on (passed to it as PORT), the containerPort, the probes and the Service port.
   port: 8080
 
 ingress:

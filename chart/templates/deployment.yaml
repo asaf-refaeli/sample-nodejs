@@ -41,6 +41,10 @@ spec:
             - name: http
               containerPort: {{ .Values.service.port }}
               protocol: TCP
+          # The app listens on PORT; set it from the same value as containerPort and the probes
+          env:
+            - name: PORT
+              value: {{ .Values.service.port | quote }}
           {{- with .Values.livenessProbe }}
           livenessProbe:
             {{- toYaml . | nindent 12 }}
